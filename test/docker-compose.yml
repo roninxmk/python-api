@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  voice-registry:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - ./temp:/usr/src/app/temp
+      - ./storage:/usr/src/app/storage
+    ports:
+      - 80:80
