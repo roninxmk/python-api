@@ -10,7 +10,7 @@ from passlib.apps import custom_app_context as pwd_context
 import re
 
 # Import the framework
-from flask import Flask, g, json, send_from_directory, render_template, redirect, url_for
+from flask import Flask, g, json, send_from_directory, render_template, redirect, url_for, make_response
 from flask_restful import Resource, Api, reqparse, fields, marshal, request 
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 
@@ -33,23 +33,26 @@ TEMP_DIRECTORY = './temp'
 #     os.makedirs(UPLOAD_DIRECTORY)
 
 def get_db():
-    db = getattr(g, '_database', None)
+    db = getattr(g, '_database1', None)
     if db is None:
-        db = g._database = shelve.open("sounds.db")
+        db = g._database1 = shelve.open("sounds.db")
     return db
 
 def get_userdb():
-    db = getattr(g, '_database', None)
+    db = getattr(g, '_database2', None)
     if db is None:
-        db = g._database = shelve.open("users.db")
+        db = g._database2 = shelve.open("users.db")
     return db
 
 @app.teardown_appcontext
 def teardown_db(exception):
-    db = getattr(g, '_database', None)
+    db1 = getattr(g, '_database1', None)
+    db2 = getattr(g, '_database2', None)
     # db = g.pop('db', None)
-    if db is not None:
-        db.close()
+    if db1 is not None:
+        db1.close()
+    if db2 is not None:
+        db2.close()
 
 @app.route('/')
 def index():
@@ -61,18 +64,6 @@ def readme():
         content = markdown_file.read()
     return markdown.markdown(content)
 
-# # Route for handling the login page logic
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-#             error = 'Invalid Credentials. Please try again.'
-#         else:
-#             return redirect(url_for('home'))
-#     return render_template('login.html', error=error)
-
-
 class SoundList(Resource):
     def get(self):
         filename = request.args.get('name')
@@ -83,7 +74,7 @@ class SoundList(Resource):
         print("maxduration: {}" .format(maxduration), file=sys.stderr)
         print("filesize: {}" .format(filesize), file=sys.stderr)
 
-        if maxduration is None:
+        if maxduration is None or maxduration == "":
             maxduration = "9999999999"
 
         shelf = get_db()
@@ -93,14 +84,14 @@ class SoundList(Resource):
 
         sounds = []
         for key in keys:
-            if filesize is None:
+            if filesize is None or filesize == "":
                 if filename is not None and filename == shelf[key]['name'] and (shelf[key]['duration'] < float(maxduration)):
                     print("Found filename", file=sys.stderr)
                     if shelf[key] not in sounds:
                         print("Adding item for filename.", file=sys.stderr)
                         sounds.append(shelf[key])
                 else:
-                    if filename is None and (shelf[key]['duration'] < float(maxduration)):
+                    if (filename is None or filename == "") and (shelf[key]['duration'] < float(maxduration)):
                         if shelf[key] not in sounds:
                             print("Adding item.", file=sys.stderr)
                             sounds.append(shelf[key])
@@ -111,17 +102,23 @@ class SoundList(Resource):
                             print("Adding item for filename and filesize.", file=sys.stderr)
                             sounds.append(shelf[key])
                     else:
-                        if filename is None and (shelf[key]['duration'] < float(maxduration)):
+                        if (filename is None or filename == "") and (shelf[key]['duration'] < float(maxduration)):
                             if shelf[key] not in sounds:
                                 print("Adding item for filesize", file=sys.stderr)
                                 sounds.append(shelf[key])
 
 
         print("Done!!!", file=sys.stderr)
+        headers = {'Content-Type': 'text/html'}
         if len(sounds) == 0:
+            error = 'Sound not found'
+            print("Nothing found!!!", file=sys.stderr)
             return {'message': 'Sound not found.'}, 200
+            # return make_response(render_template('list.html', error=error, results=""), headers)
         else:
             return {'message': 'Success!', 'data': sounds}, 200
+            # return make_response(render_template('list.html', error="", results=sounds), headers)
+
 
 class SoundPost(Resource):
     def post(self):
@@ -217,14 +214,14 @@ def verify_password(username, password):
 
     # Check database
     print("Get DB", file=sys.stderr)
-    shelf = get_userdb()
+    authshelf = get_userdb()
     print("Get keys", file=sys.stderr)
-    keys = list(shelf.keys())
+    keys = list(authshelf.keys())
     for key in keys:
         print("key: {}" .format(key), file=sys.stderr)
-        isok = check_password(password, shelf[key]['password'])
+        isok = check_password(password, authshelf[key]['password'])
         print("isok: {}" .format(isok), file=sys.stderr)
-        if (username == shelf[key]['user']) and (isok):
+        if (username == authshelf[key]['user']) and (isok):
             return username
     return False
 
@@ -425,11 +422,14 @@ class SoundAuthDownload(Resource):
 
         print("Get DB", file=sys.stderr)
         self.shelf = get_db()
+        self.shelf = get_db()
+        self.shelf.sync()
         print("Get keys", file=sys.stderr)
         keys = list(self.shelf.keys())
 
         for key in keys:
             print("key: {}" .format(key), file=sys.stderr)
+            print("shelf: {}" .format(self.shelf[key]), file=sys.stderr)
             if filename == self.shelf[key]['name']:
                 print("id: {}" .format(self.shelf[key]['id']), file=sys.stderr)
                 print("name: {}" .format(self.shelf[key]['name']), file=sys.stderr)

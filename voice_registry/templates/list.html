@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Sound registry - list page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sound registry - List</h1>
+      <br>
+      <form action="/list" method="GET">
+        <input type="text" placeholder="File Name" name="name" value="{{
+          request.args.name }}">
+        <input type="text" placeholder="Max Duration" name="maxduration" value="{{
+          request.args.maxduration }}">
+        <input type="text" placeholder="File Size" name="size" value="{{
+          request.args.size }}">
+        <input class="btn btn-default" type="submit" value="Generate list">
+      </form>
+      {% if error %}
+        <p class="error"><strong>Warning:</strong> {{ error }}
+      {% endif %}
+    </div>
+    <div class="col-sm-5 col-sm-offset-1">
+        {% if results %}
+          <h2>List of sounds</h2>
+          <br>
+          <div id="results">
+            <table class="table table-striped" style="max-width: 300px;">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Duration [s]</th>
+                  <th>Size [bytes]</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for result in results%}
+                <tr>
+                  <td>{{ result.name }}</td>
+                  <td>{{ result.duration }}</td>
+                  <td>{{ result.size }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      </div>
+    
+  </body>
+</html>

@@ -55,24 +55,21 @@ returned as JSON.
 ### Update normal user sign up
 * curl -v -X POST -H "Content-Type: application/json" -d '{"username":"oper","password":"oper", "auth": "oper"}' http://localhost/users
 
-
-* curl http://localhost/list?name=meuarquivo.wav\&maxduration=4 --user admin:admin
-
-
+### Authorization test
 * curl http://localhost/authtest
 * curl http://localhost/authtest --user admin:pwd
 * curl http://localhost/authtest --user admin:superpwd
-* curl http://localhost/authdownload?name=myfile.wav
-* curl http://localhost/authdownload?name=myfile.wav --user admin:pwd
-* curl http://localhost/authdownload?name=myfile.wav --user admin:superpwd
+
+### Download with credentials check
+* curl http://localhost/authdownload?name=myfile.wav 
+* curl http://localhost/authdownload?name=myfile.wav --user admin:superpwd -o <filename\>
+* curl http://localhost/authdownload?name=myfile.wav --user admin:superpwd -o -
+
+### List with credentials check
 * curl http://localhost/authlist
 * curl http://localhost/authlist --user admin:pwd
-* curl http://localhost/authlist --user admin:superpwd
-* curl http://localhost/authdownload?name=myfile.wav
-* curl http://localhost/authdownload?name=myfile.wav
-* curl --user admin:superpwd http://localhost/authdownload?name=myfile.wav
- 
-
+* curl http://localhost/authlist?name=myfile.wav\&maxduration=4 --user admin:superpwd
+* curl http://localhost/authlist?name=myfile.wav\&maxduration=3 --user admin:superpwd
 
 ## Sources
 
@@ -86,7 +83,13 @@ returned as JSON.
 * https://realpython.com/using-flask-login-for-user-management-with-flask/
 * https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-online-version-spring-2019/implementing-rest-apis-with-flask/
 * https://stackoverflow.com/questions/39834436/flask-restful-app-fails-when-authentication-is-enabled
+* https://help.parsehub.com/hc/en-us/articles/217751808-API-Tutorial-How-to-get-run-data-using-Python-Flask
+* https://www.jameskozlowski.com/index.php/2018/04/14/a-simple-flask-api-example/
+* http://zetcode.com/python/flask/
+
 
 https://www.humankode.com/ssl/how-to-set-up-free-ssl-certificates-from-lets-encrypt-using-docker-and-nginx
 https://stackoverflow.com/questions/58271312/run-flask-application-with-nginx-and-https
 https://medium.com/faun/deploy-flask-app-with-nginx-using-gunicorn-7fda4f50066a
+
+https://nearsoft.com/blog/how-to-create-an-api-and-web-applications-with-flask/
