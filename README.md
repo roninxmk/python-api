@@ -102,3 +102,9 @@ returned as JSON.
 * From 2012: https://blog.kgriffs.com/2012/12/18/uwsgi-vs-gunicorn-vs-node-benchmarks.html
 * From 2017: https://www.toptal.com/back-end/server-side-io-performance-node-php-java-go
 * From 2020: https://www.mindinventory.com/blog/python-vs-node-js/
+
+# Usage from local machine
+
+Inside the python-api folder:
+ 
+* sudo docker-compose up --build
