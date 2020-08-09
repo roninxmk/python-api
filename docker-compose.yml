@@ -7,5 +7,7 @@ services:
       - .:/usr/src/app
       - ./temp:/usr/src/app/temp
       - ./storage:/usr/src/app/storage
+      - ./voice_registry/templates:/usr/src/app/templates
+      - ./static:/usr/src/app/static
     ports:
       - 80:80
