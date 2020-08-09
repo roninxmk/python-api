@@ -8,9 +8,10 @@ import uuid
 import sys
 from passlib.apps import custom_app_context as pwd_context
 import re
+import json # if neeed for json.dumps()
 
 # Import the framework
-from flask import Flask, g, json, send_from_directory, render_template, redirect, url_for, make_response
+from flask import Flask, g, json, send_from_directory, render_template, redirect, url_for, make_response, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal, request 
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 
@@ -114,6 +115,7 @@ class SoundList(Resource):
             error = 'Sound not found'
             print("Nothing found!!!", file=sys.stderr)
             return {'message': 'Sound not found.'}, 200
+            # return jsonify({'message': 'Sound not found.'}), 200
             # return make_response(render_template('list.html', error=error, results=""), headers)
         else:
             return {'message': 'Success!', 'data': sounds}, 200
