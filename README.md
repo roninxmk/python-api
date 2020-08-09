@@ -87,9 +87,18 @@ returned as JSON.
 * https://www.jameskozlowski.com/index.php/2018/04/14/a-simple-flask-api-example/
 * http://zetcode.com/python/flask/
 
+## Future reading
 
-https://www.humankode.com/ssl/how-to-set-up-free-ssl-certificates-from-lets-encrypt-using-docker-and-nginx
-https://stackoverflow.com/questions/58271312/run-flask-application-with-nginx-and-https
-https://medium.com/faun/deploy-flask-app-with-nginx-using-gunicorn-7fda4f50066a
+* https://www.humankode.com/ssl/how-to-set-up-free-ssl-certificates-from-lets-encrypt-using-docker-and-nginx
+* https://stackoverflow.com/questions/58271312/run-flask-application-with-nginx-and-https
+* https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04
+* https://medium.com/faun/deploy-flask-app-with-nginx-using-gunicorn-7fda4f50066a
+* https://nearsoft.com/blog/how-to-create-an-api-and-web-applications-with-flask/
+* https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login
+* https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 
-https://nearsoft.com/blog/how-to-create-an-api-and-web-applications-with-flask/
+# Benchmarks
+
+* From 2012: https://blog.kgriffs.com/2012/12/18/uwsgi-vs-gunicorn-vs-node-benchmarks.html
+* From 2017: https://www.toptal.com/back-end/server-side-io-performance-node-php-java-go
+* From 2020: https://www.mindinventory.com/blog/python-vs-node-js/
